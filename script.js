@@ -12,7 +12,7 @@ function getPerformanceTime(func, loopCount) {
   return endTime - startTime;
 }
 
-function makeDataSet(objectDefinePropertyFunc, proxyFunc) {
+function buildDataSet(objectDefinePropertyFunc, proxyFunc) {
   const measuresObjectDefineProperty = loopCounts.map((loopCount) =>
     getPerformanceTime(objectDefinePropertyFunc, loopCount)
   );
@@ -36,6 +36,16 @@ function makeDataSet(objectDefinePropertyFunc, proxyFunc) {
   };
 }
 
+function buildChartOptions(title, data) {
+  return {
+    title,
+    data,
+    type: "line",
+    height: 250,
+    colors: ["red", "blue"],
+  };
+}
+
 function useObjectDefineProperty1() {
   const data = { key: "" };
   Object.defineProperty(data, "key", {
@@ -51,8 +61,6 @@ function useProxy1() {
     set() {},
   });
 }
-
-const data1 = makeDataSet(useObjectDefineProperty1, useProxy1);
 
 function useObjectDefineProperty2() {
   const data = { key: "" };
@@ -82,25 +90,14 @@ function useProxy2() {
   data.key = "newVal";
 }
 
-const data2 = makeDataSet(useObjectDefineProperty2, useProxy2);
+const data1 = buildDataSet(useObjectDefineProperty1, useProxy1);
+const data2 = buildDataSet(useObjectDefineProperty2, useProxy2);
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
-    new Chart("#chart1", {
-      title: "Object.defineProperty vs Proxy only calling",
-      data: data1,
-      type: "line",
-      height: 250,
-      colors: ["red", "blue"],
-    });
-    new Chart("#chart2", {
-      title: "Object.defineProperty vs Proxy update key",
-      data: data2,
-      type: "line",
-      height: 250,
-      colors: ["red", "blue"],
-    });
+    new Chart("#chart1", buildChartOptions("Only calling", data1));
+    new Chart("#chart2", buildChartOptions("Update key", data2));
   },
   false
 );
