@@ -79,15 +79,16 @@ function useObjectDefineProperty2() {
 function useProxy2() {
   const data = { key: "" };
   let key = "";
-  new Proxy(data, {
+  const proxy = new Proxy(data, {
     get() {
       return key;
     },
-    set(newVal) {
+    set(_target, _prop, newVal) {
       key = newVal;
+      return true;
     },
   });
-  data.key = "newVal";
+  proxy.key = "newVal";
 }
 
 const data1 = buildDataSet(useObjectDefineProperty1, useProxy1);
