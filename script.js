@@ -1,7 +1,7 @@
 import { Chart } from "frappe-charts/dist/frappe-charts.esm.js";
 import "frappe-charts/dist/frappe-charts.min.css";
 
-const loopCounts = [5_000, 50_000, 500_000, 5_000_000];
+const loopCounts = [10_000, 100_000, 1_000_000];
 
 function measurePerformance(func, loopCount) {
   const startTime = performance.now();

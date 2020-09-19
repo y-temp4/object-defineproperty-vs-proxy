@@ -5,6 +5,9 @@
   "repository": "ssh://git@github.com/y-temp4/object-defineproperty-vs-proxy",
   "author": "y-temp4 <y.temp4@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "parcel index.html"
+  },
   "devDependencies": {
     "parcel": "^2.0.0-beta.1"
   },
