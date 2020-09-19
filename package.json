@@ -4,5 +4,11 @@
   "main": "index.js",
   "repository": "ssh://git@github.com/y-temp4/object-defineproperty-vs-proxy",
   "author": "y-temp4 <y.temp4@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "parcel": "^2.0.0-beta.1"
+  },
+  "dependencies": {
+    "frappe-charts": "^1.5.2"
+  }
 }
