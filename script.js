@@ -3,13 +3,37 @@ import "frappe-charts/dist/frappe-charts.min.css";
 
 const loopCounts = [10_000, 100_000, 1_000_000];
 
-function measurePerformance(func, loopCount) {
+function getPerformanceTime(func, loopCount) {
   const startTime = performance.now();
   for (let i = 0; i < loopCount; i++) {
     func();
   }
   const endTime = performance.now();
   return endTime - startTime;
+}
+
+function makeDataSet(objectDefinePropertyFunc, proxyFunc) {
+  const measuresObjectDefineProperty = loopCounts.map((loopCount) =>
+    getPerformanceTime(objectDefinePropertyFunc, loopCount)
+  );
+  const measuresProxy = loopCounts.map((loopCount) =>
+    getPerformanceTime(proxyFunc, loopCount)
+  );
+  return {
+    labels: loopCounts,
+    datasets: [
+      {
+        name: "Object.defineProperty",
+        type: "line",
+        values: measuresObjectDefineProperty,
+      },
+      {
+        name: "Proxy",
+        type: "line",
+        values: measuresProxy,
+      },
+    ],
+  };
 }
 
 function useObjectDefineProperty1() {
@@ -28,31 +52,7 @@ function useProxy1() {
   });
 }
 
-const measuresObjectDefineProperty1 = loopCounts.map((loopCount) => {
-  const time = measurePerformance(useObjectDefineProperty1, loopCount);
-  return time;
-});
-
-const measuresProxy1 = loopCounts.map((loopCount) => {
-  const time = measurePerformance(useProxy1, loopCount);
-  return time;
-});
-
-const data1 = {
-  labels: loopCounts,
-  datasets: [
-    {
-      name: "Object.defineProperty",
-      type: "line",
-      values: measuresObjectDefineProperty1,
-    },
-    {
-      name: "Proxy",
-      type: "line",
-      values: measuresProxy1,
-    },
-  ],
-};
+const data1 = makeDataSet(useObjectDefineProperty1, useProxy1);
 
 function useObjectDefineProperty2() {
   const data = { key: "" };
@@ -82,31 +82,7 @@ function useProxy2() {
   data.key = "newVal";
 }
 
-const measuresObjectDefineProperty2 = loopCounts.map((loopCount) => {
-  const time = measurePerformance(useObjectDefineProperty2, loopCount);
-  return time;
-});
-
-const measuresProxy2 = loopCounts.map((loopCount) => {
-  const time = measurePerformance(useProxy2, loopCount);
-  return time;
-});
-
-const data2 = {
-  labels: loopCounts,
-  datasets: [
-    {
-      name: "Object.defineProperty",
-      type: "line",
-      values: measuresObjectDefineProperty2,
-    },
-    {
-      name: "Proxy",
-      type: "line",
-      values: measuresProxy2,
-    },
-  ],
-};
+const data2 = makeDataSet(useObjectDefineProperty2, useProxy2);
 
 document.addEventListener(
   "DOMContentLoaded",
